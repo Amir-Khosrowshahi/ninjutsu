@@ -1,0 +1,226 @@
+﻿@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  --background: #0f172a;
+  --primary: #00797f;
+  --foreground: #f8fafc;
+}
+
+* {
+  margin: 0;
+  padding: 0;
+  outline: none;
+  list-style: none;
+  box-sizing: border-box;
+  font-family: IranSansWeb;
+}
+
+@font-face {
+  font-family: "IranSansWeb";
+  src: url("../public//fonts/IranSansWeb/IRANSansWeb(FaNum)_Black.woff2")
+    format("woff2");
+  font-weight: 900;
+  font-style: normal;
+  font-display: swap;
+}
+@font-face {
+  font-family: "IranSansWeb";
+  src: url("../public//fonts/IranSansWeb/IRANSansWeb(FaNum)_Bold.woff2")
+    format("woff2");
+  font-weight: 700;
+  font-style: normal;
+  font-display: swap;
+}
+@font-face {
+  font-family: "IranSansWeb";
+  src: url("../public//fonts/IranSansWeb/IRANSansWeb(FaNum)_Medium.woff2")
+    format("woff2");
+  font-weight: 500;
+  font-style: normal;
+  font-display: swap;
+}
+@font-face {
+  font-family: "IranSansWeb";
+  src: url("../public//fonts/IranSansWeb/IRANSansWeb(FaNum)_Light.woff2")
+    format("woff2");
+  font-weight: 300;
+  font-style: normal;
+  font-display: swap;
+}
+@font-face {
+  font-family: "IranSansWeb";
+  src: url("../public//fonts/IranSansWeb/IRANSansWeb(FaNum)_UltraLight.woff2")
+    format("woff2");
+  font-weight: 200;
+  font-style: normal;
+  font-display: swap;
+}
+@font-face {
+  font-family: "IranSansWeb";
+  src: url("../public//fonts/IranSansWeb/IRANSansWeb(FaNum).woff2")
+    format("woff2");
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: "IranSansWebNoNum";
+  src: url("../public//fonts/IranSansWeb/IRANSansWeb_Bold.woff2")
+    format("woff2");
+  font-weight: 700;
+  font-style: normal;
+  font-display: swap;
+}
+@font-face {
+  font-family: "IranSansWebNoNum";
+  src: url("../public//fonts/IranSansWeb/IRANSansWeb_Medium.woff2")
+    format("woff2");
+  font-weight: 500;
+  font-style: normal;
+  font-display: swap;
+}
+@font-face {
+  font-family: "IranSansWebNoNum";
+  src: url("../public//fonts/IranSansWeb/IRANSansWeb_Light.woff2")
+    format("woff2");
+  font-weight: 300;
+  font-style: normal;
+  font-display: swap;
+}
+@font-face {
+  font-family: "IranSansWebNoNum";
+  src: url("../public//fonts/IranSansWeb/IRANSansWeb_UltraLight.woff2")
+    format("woff2");
+  font-weight: 200;
+  font-style: normal;
+  font-display: swap;
+}
+@font-face {
+  font-family: "IranSansWebNoNum";
+  src: url("../public/fonts/IranSansWeb/IRANSansWeb.woff2") format("woff2");
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: "BNazanin";
+  src: url("../public//fonts/bnazanin/bnazanin.ttf") format("truetype");
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+}
+
+@theme inline {
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --color-primary: var(--primary);
+  --font-sans: var(--font-geist-sans);
+  --font-mono: var(--font-geist-mono);
+}
+
+body {
+  @apply bg-primary-black text-white;
+  background-image: radial-gradient(
+    circle at 50% 50%,
+    rgba(198, 164, 60, 0.03) 0%,
+    transparent 50%
+  );
+}
+
+
+
+@layer components {
+  .samurai-card {
+    @apply relative border-2 border-primary-gold/30 bg-gradient-to-br from-primary-black/90 to-black/90 p-6 
+           backdrop-blur-sm transition-all duration-300 hover:border-primary-gold hover:shadow-[0_0_30px_rgba(198,164,60,0.15)];
+  }
+
+  .ninja-shadow {
+    @apply shadow-[0_10px_30px_-10px_rgba(0,0,0,0.8)];
+  }
+
+  .katana-divider {
+    @apply relative h-[2px] w-full bg-gradient-to-r from-transparent via-primary-gold to-transparent my-8;
+  }
+
+  .ink-brush-title {
+    @apply relative inline-block;
+  }
+
+  .ink-brush-title::after {
+    content: "";
+    @apply absolute -bottom-2 left-0 h-[3px] w-full bg-[url('/images/brush-stroke.png')] bg-repeat-x opacity-70;
+  }
+
+  .dojo-card {
+    @apply relative overflow-hidden border border-primary-gold/20 bg-black/40 p-6 backdrop-blur-sm
+           transition-all duration-500 hover:border-primary-gold/60 hover:bg-black/60;
+  }
+
+  .dojo-card::before {
+    content: "";
+    @apply absolute inset-0 bg-gradient-to-t from-primary-gold/5 to-transparent opacity-0 
+           transition-opacity duration-500 group-hover:opacity-100;
+  }
+
+  .japanese-pattern {
+    @apply absolute inset-0 bg-[url('/images/japanese-pattern.png')] bg-repeat opacity-5 pointer-events-none;
+  }
+
+  .btn-samurai {
+    @apply relative overflow-hidden border border-primary-gold/50 px-6 py-3 text-primary-gold 
+           transition-all duration-300 hover:border-primary-gold hover:text-black;
+  }
+
+  .btn-samurai::before {
+    content: "";
+    @apply absolute inset-0 bg-primary-gold transform scale-x-0 transition-transform duration-300 
+           origin-left group-hover:scale-x-100;
+  }
+
+  .input-ninja {
+    @apply w-full bg-black/50 border border-gray-700 text-white px-4 py-3 
+           focus:border-primary-gold focus:outline-none focus:ring-1 focus:ring-primary-gold/50
+           transition-colors duration-300;
+  }
+}
+
+@layer utilities {
+  .text-shadow-gold {
+    text-shadow: 0 0 10px rgba(198, 164, 60, 0.5);
+  }
+
+  .text-shadow-black {
+    text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
+  }
+
+  .scrollbar-hidden::-webkit-scrollbar {
+    display: none;
+  }
+}
+
+/* Custom Scrollbar */
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: #0a0c0f;
+}
+
+::-webkit-scrollbar-thumb {
+  background: #c6a43c;
+  border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: #a88932;
+}
+.rtl {
+  direction: rtl;
+}
