@@ -66,7 +66,7 @@ export default function Hero() {
           </div>
 
           {/* Title */}
-          <h1 className='text-5xl lg:text-6xl font-bold text-white mb-6 leading-[100px]'>
+          <h1 className='text-5xl lg:text-6xl font-bold text-white mb-6 lg:leading-[100px]'>
             <span className='relative inline-block'>هرگز</span>{" "}
             <span className='text-primary-gold text-4xl lg:text-6xl relative inline-block transition-transform'>
               تسلیم
@@ -126,7 +126,7 @@ export default function Hero() {
       </div>
 
       {/* Scroll Indicator */}
-      <div className='absolute bottom-10 left-1/2 transform -translate-x-1/2'>
+      <div className='absolute bottom-10 left-1/2 transform -translate-x-1/2 hidden lg:flex'>
         <div className='flex flex-col items-center gap-2'>
           <span className='text-xs text-gray-400 uppercase tracking-wider font-medium'>
             اسکرول

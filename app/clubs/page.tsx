@@ -166,7 +166,7 @@ export default function ClubsPage() {
       </div>
 
       <div className='container mx-auto px-4 relative z-10'>
-        {/* Header Section - بدون انیمیشن */}
+        {/* Header Section */}
         <div className='text-center mb-16 lg:mb-20'>
           <div className='flex items-center justify-center gap-3 mb-6'>
             <GiSamuraiHelmet className='text-4xl lg:text-5xl text-primary-gold' />

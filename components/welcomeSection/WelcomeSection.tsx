@@ -54,7 +54,7 @@ export default function WelcomeSection() {
           <div className='inline-flex items-center justify-center gap-4 mb-6'>
             <GiNinjaHead className='text-4xl text-primary-gold' />
             <span className='w-12 h-0.5 bg-primary-gold/50' />
-            <h2 className='text-4xl lg:text-5xl font-black text-white'>
+            <h2 className='text-2xl lg:text-5xl font-black text-white'>
               به وبسایت <span className='text-primary-gold'>نینجا تهران</span>{" "}
               خوش آمدید
             </h2>
