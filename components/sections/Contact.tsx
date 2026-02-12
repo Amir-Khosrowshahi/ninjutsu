@@ -44,7 +44,6 @@ export default function Contact() {
     });
   };
 
-  // مختصات آکادمی - تهران، ولیعصر، نبش بهشتی
   const location = {
     lat: 35.7219,
     lng: 51.4244,
@@ -53,9 +52,6 @@ export default function Contact() {
 
   return (
     <section className='py-20 bg-gradient-to-b from-black to-primary-black relative overflow-hidden'>
-      {/* فاصله هدر */}
-      <div className='h-20 lg:h-[120px]' />
-
       {/* Background Pattern */}
       <div className='absolute inset-0 opacity-5'>
         <div className="absolute top-0 left-0 w-full h-full bg-[url('/images/japanese-pattern.png')] bg-repeat" />
@@ -347,7 +343,7 @@ export default function Contact() {
           </div>
         </div>
 
-        {/* Info Box - زمانبندی */}
+        {/* Info Box */}
         <div className='mt-12'>
           <div className='relative bg-gradient-to-br from-gray-900 to-black rounded-3xl border border-gray-800 p-8 lg:p-10'>
             <div className='absolute inset-0 opacity-10'>
