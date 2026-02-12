@@ -3,6 +3,7 @@
 import Link from "next/link";
 import Image from "next/image";
 import { useState, useEffect, useRef } from "react";
+import { usePathname } from "next/navigation"; 
 
 import { FiMenu, FiX, FiUser, FiChevronDown } from "react-icons/fi";
 import {
@@ -101,12 +102,20 @@ const navigation = [
 ];
 
 export default function Header() {
+  const pathname = usePathname(); 
   const [isOpen, setIsOpen] = useState(false);
   const [isScrolled, setIsScrolled] = useState(false);
   const [activeSubmenu, setActiveSubmenu] = useState<string | null>(null);
   const [scrollProgress, setScrollProgress] = useState(0);
   const timeoutRef = useRef<NodeJS.Timeout | null>(null);
   const [openMobileMenus, setOpenMobileMenus] = useState<string[]>([]);
+
+  const isActiveLink = (href: string) => {
+    if (href === "/") {
+      return pathname === href;
+    }
+    return pathname?.startsWith(href);
+  };
 
   useEffect(() => {
     const handleScroll = () => {
@@ -122,7 +131,6 @@ export default function Header() {
     return () => window.removeEventListener("scroll", handleScroll);
   }, []);
 
-  // قفل اسکرول وقتی منوی موبایل باز است
   useEffect(() => {
     if (isOpen) {
       document.body.style.overflow = "hidden";
@@ -229,134 +237,192 @@ export default function Header() {
 
               {/* Desktop Navigation */}
               <nav className='hidden lg:flex items-center'>
-                {navigation.map((item) => (
-                  <div
-                    key={item.name}
-                    className='relative group'
-                    onMouseEnter={() => handleMouseEnter(item.name)}
-                    onMouseLeave={handleMouseLeave}
-                  >
-                    {item.submenu ? (
-                      <>
-                        <button className='relative px-3 xl:px-4 py-2 text-gray-300 hover:text-primary-gold transition-colors duration-300 group'>
-                          <span className='relative z-10 text-xs xl:text-sm font-medium'>
-                            {item.name}
-                          </span>
-                          <FiChevronDown
-                            className={`absolute left-[-5px] top-1/2 transform -translate-y-1/2 text-primary-gold/60 transition-all duration-300 ${
-                              activeSubmenu === item.name
-                                ? "rotate-180 opacity-100"
-                                : "opacity-0 group-hover:opacity-100"
+                {navigation.map((item) => {
+                  const isActive = isActiveLink(item.href);
+
+                  return (
+                    <div
+                      key={item.name}
+                      className='relative group'
+                      onMouseEnter={() => handleMouseEnter(item.name)}
+                      onMouseLeave={handleMouseLeave}
+                    >
+                      {item.submenu ? (
+                        <>
+                          <button
+                            className={`relative px-3 xl:px-4 py-2 transition-colors duration-300 group ${
+                              isActive
+                                ? "text-primary-gold"
+                                : "text-gray-300 hover:text-primary-gold"
                             }`}
-                            size={12}
-                          />
-
-                          {/* Hover effect */}
-                          <span className='absolute inset-x-3 xl:inset-x-4 bottom-0 h-[2px] bg-primary-gold transform scale-x-0 group-hover:scale-x-100 transition-transform duration-300 origin-right' />
-                        </button>
-
-                        {activeSubmenu === item.name && (
-                          <div
-                            className='absolute top-full right-0 mt-2 w-[550px] xl:w-[600px] bg-gradient-to-b from-black to-primary-black border border-primary-gold/30 shadow-2xl'
-                            style={{ transformOrigin: "top" }}
-                            onMouseEnter={() => handleMouseEnter(item.name)}
-                            onMouseLeave={handleMouseLeave}
                           >
-                            {/* Decorative top bar */}
-                            <div className='absolute top-0 right-0 w-full h-1 bg-gradient-to-r from-transparent via-primary-gold to-transparent' />
+                            <span className='relative z-10 text-xs xl:text-sm font-medium'>
+                              {item.name}
+                            </span>
+                            <FiChevronDown
+                              className={`absolute left-[-5px] top-1/2 transform -translate-y-1/2 transition-all duration-300 ${
+                                isActive
+                                  ? "text-primary-gold opacity-100"
+                                  : "text-primary-gold/60 opacity-0 group-hover:opacity-100"
+                              } ${
+                                activeSubmenu === item.name ? "rotate-180" : ""
+                              }`}
+                              size={12}
+                            />
 
-                            <div className='relative p-5 xl:p-6'>
-                              {/* Japanese pattern background */}
-                              <div className='absolute inset-0 opacity-5'>
-                                <div className="absolute inset-0 bg-[url('/images/japanese-pattern.png')] bg-repeat" />
-                              </div>
+                            {/* Active indicator */}
+                            {isActive && (
+                              <span className='absolute inset-x-3 xl:inset-x-4 bottom-0 h-[2px] bg-primary-gold' />
+                            )}
 
-                              <div className='relative z-10'>
-                                {/* Header */}
-                                <div className='flex items-center justify-between mb-5 xl:mb-6 pb-3 xl:pb-4 border-b border-gray-800'>
-                                  <div>
-                                    <h3 className='text-base xl:text-lg text-primary-gold mb-1'>
-                                      {item.name}
-                                    </h3>
-                                    <p className='text-xs text-gray-400'>
-                                      {item.description}
-                                    </p>
-                                  </div>
-                                  <Link
-                                    href={item.href}
-                                    className='text-xs text-gray-400 hover:text-primary-gold transition-colors flex items-center gap-1'
-                                  >
-                                    مشاهده همه
-                                    <FiChevronDown
-                                      className='rotate-90'
-                                      size={12}
-                                    />
-                                  </Link>
+                            {/* Hover effect */}
+                            <span className='absolute inset-x-3 xl:inset-x-4 bottom-0 h-[2px] bg-primary-gold transform scale-x-0 group-hover:scale-x-100 transition-transform duration-300 origin-right' />
+                          </button>
+
+                          {activeSubmenu === item.name && (
+                            <div
+                              className='absolute top-full right-0 mt-2 w-[550px] xl:w-[600px] bg-gradient-to-b from-black to-primary-black border border-primary-gold/30 shadow-2xl'
+                              style={{ transformOrigin: "top" }}
+                              onMouseEnter={() => handleMouseEnter(item.name)}
+                              onMouseLeave={handleMouseLeave}
+                            >
+                              {/* Decorative top bar */}
+                              <div className='absolute top-0 right-0 w-full h-1 bg-gradient-to-r from-transparent via-primary-gold to-transparent' />
+
+                              <div className='relative p-5 xl:p-6'>
+                                {/* Japanese pattern background */}
+                                <div className='absolute inset-0 opacity-5'>
+                                  <div className="absolute inset-0 bg-[url('/images/japanese-pattern.png')] bg-repeat" />
                                 </div>
 
-                                {/* Submenu grid */}
-                                <div className='grid grid-cols-2 gap-3 xl:gap-4'>
-                                  {item.submenu.map((sub) => {
-                                    const Icon = sub.icon;
-                                    return (
-                                      <Link
-                                        key={sub.name}
-                                        href={sub.href}
-                                        className='group/sub flex items-start gap-2 xl:gap-3 p-2 xl:p-3 border border-transparent hover:border-primary-gold/30 hover:bg-primary-gold/5 transition-all duration-300 rounded-lg'
-                                      >
-                                        <div className='relative'>
-                                          <div className='w-8 h-8 xl:w-10 xl:h-10 flex items-center justify-center border-2 border-primary-gold/30 group-hover/sub:border-primary-gold group-hover/sub:bg-primary-gold/10 transition-all rounded-lg'>
-                                            <Icon className='text-primary-gold text-base xl:text-xl' />
-                                          </div>
-                                          {/* Glow effect */}
-                                          <div className='absolute inset-0 bg-primary-gold/20 rounded-full blur-xl opacity-0 group-hover/sub:opacity-100 transition-opacity' />
-                                        </div>
-                                        <div className='flex-1 min-w-0'>
-                                          <div className='flex items-center gap-1 xl:gap-2 mb-1 flex-wrap'>
-                                            <span className='text-white text-xs xl:text-sm font-medium group-hover/sub:text-primary-gold transition-colors truncate'>
-                                              {sub.name}
-                                            </span>
-                                            <span className='px-1.5 xl:px-2 py-0.5 bg-primary-gold/10 border border-primary-gold/30 text-[8px] xl:text-[10px] text-primary-gold rounded-full whitespace-nowrap'>
-                                              {sub.level}
-                                            </span>
-                                          </div>
-                                          <p className='text-[10px] xl:text-xs text-gray-400 line-clamp-2'>
-                                            {sub.description}
-                                          </p>
-                                        </div>
-                                      </Link>
-                                    );
-                                  })}
-                                </div>
-
-                                {/* Footer */}
-                                <div className='mt-4 xl:mt-6 pt-3 xl:pt-4 border-t border-gray-800 flex items-center justify-between'>
-                                  <div className='flex items-center gap-2 text-[10px] xl:text-xs text-gray-400'>
-                                    <GiShuriken className='text-primary-gold text-sm xl:text-base' />
-                                    <span>دوره‌های ویژه با تخفیف نوروزی</span>
+                                <div className='relative z-10'>
+                                  {/* Header */}
+                                  <div className='flex items-center justify-between mb-5 xl:mb-6 pb-3 xl:pb-4 border-b border-gray-800'>
+                                    <div>
+                                      <h3 className='text-base xl:text-lg text-primary-gold mb-1'>
+                                        {item.name}
+                                      </h3>
+                                      <p className='text-xs text-gray-400'>
+                                        {item.description}
+                                      </p>
+                                    </div>
+                                    <Link
+                                      href={item.href}
+                                      className={`text-xs transition-colors flex items-center gap-1 ${
+                                        isActiveLink(item.href)
+                                          ? "text-primary-gold"
+                                          : "text-gray-400 hover:text-primary-gold"
+                                      }`}
+                                    >
+                                      مشاهده همه
+                                      <FiChevronDown
+                                        className='rotate-90'
+                                        size={12}
+                                      />
+                                    </Link>
                                   </div>
-                                  <span className='text-primary-gold text-[10px] xl:text-xs font-bold bg-primary-gold/10 px-2 py-1 rounded-full'>
-                                    ۲۰٪ تخفیف
-                                  </span>
+
+                                  {/* Submenu grid */}
+                                  <div className='grid grid-cols-2 gap-3 xl:gap-4'>
+                                    {item.submenu.map((sub) => {
+                                      const Icon = sub.icon;
+                                      const isSubActive = isActiveLink(
+                                        sub.href,
+                                      );
+
+                                      return (
+                                        <Link
+                                          key={sub.name}
+                                          href={sub.href}
+                                          className={`group/sub flex items-start gap-2 xl:gap-3 p-2 xl:p-3 border transition-all duration-300 rounded-lg ${
+                                            isSubActive
+                                              ? "border-primary-gold bg-primary-gold/10"
+                                              : "border-transparent hover:border-primary-gold/30 hover:bg-primary-gold/5"
+                                          }`}
+                                        >
+                                          <div className='relative'>
+                                            <div
+                                              className={`w-8 h-8 xl:w-10 xl:h-10 flex items-center justify-center border-2 transition-all rounded-lg ${
+                                                isSubActive
+                                                  ? "border-primary-gold bg-primary-gold/20"
+                                                  : "border-primary-gold/30 group-hover/sub:border-primary-gold group-hover/sub:bg-primary-gold/10"
+                                              }`}
+                                            >
+                                              <Icon
+                                                className={`text-base xl:text-xl ${
+                                                  isSubActive
+                                                    ? "text-primary-gold"
+                                                    : "text-primary-gold"
+                                                }`}
+                                              />
+                                            </div>
+                                            {/* Glow effect */}
+                                            <div className='absolute inset-0 bg-primary-gold/20 rounded-full blur-xl opacity-0 group-hover/sub:opacity-100 transition-opacity' />
+                                          </div>
+                                          <div className='flex-1 min-w-0'>
+                                            <div className='flex items-center gap-1 xl:gap-2 mb-1 flex-wrap'>
+                                              <span
+                                                className={`text-xs xl:text-sm font-medium transition-colors truncate ${
+                                                  isSubActive
+                                                    ? "text-primary-gold"
+                                                    : "text-white group-hover/sub:text-primary-gold"
+                                                }`}
+                                              >
+                                                {sub.name}
+                                              </span>
+                                              <span className='px-1.5 xl:px-2 py-0.5 bg-primary-gold/10 border border-primary-gold/30 text-[8px] xl:text-[10px] text-primary-gold rounded-full whitespace-nowrap'>
+                                                {sub.level}
+                                              </span>
+                                            </div>
+                                            <p className='text-[10px] xl:text-xs text-gray-400 line-clamp-2'>
+                                              {sub.description}
+                                            </p>
+                                          </div>
+                                        </Link>
+                                      );
+                                    })}
+                                  </div>
+
+                                  {/* Footer */}
+                                  <div className='mt-4 xl:mt-6 pt-3 xl:pt-4 border-t border-gray-800 flex items-center justify-between'>
+                                    <div className='flex items-center gap-2 text-[10px] xl:text-xs text-gray-400'>
+                                      <GiShuriken className='text-primary-gold text-sm xl:text-base' />
+                                      <span>دوره‌های ویژه با تخفیف نوروزی</span>
+                                    </div>
+                                    <span className='text-primary-gold text-[10px] xl:text-xs font-bold bg-primary-gold/10 px-2 py-1 rounded-full'>
+                                      ۲۰٪ تخفیف
+                                    </span>
+                                  </div>
                                 </div>
                               </div>
                             </div>
-                          </div>
-                        )}
-                      </>
-                    ) : (
-                      <Link
-                        href={item.href}
-                        className='relative px-3 xl:px-4 py-2 text-gray-300 hover:text-primary-gold transition-colors duration-300 group'
-                      >
-                        <span className='relative z-10 text-xs xl:text-sm font-medium'>
-                          {item.name}
-                        </span>
-                        <span className='absolute inset-x-3 xl:inset-x-4 bottom-0 h-[2px] bg-primary-gold transform scale-x-0 group-hover:scale-x-100 transition-transform duration-300 origin-right' />
-                      </Link>
-                    )}
-                  </div>
-                ))}
+                          )}
+                        </>
+                      ) : (
+                        <Link
+                          href={item.href}
+                          className={`relative px-3 xl:px-4 py-2 transition-colors duration-300 group ${
+                            isActive
+                              ? "text-primary-gold"
+                              : "text-gray-300 hover:text-primary-gold"
+                          }`}
+                        >
+                          <span className='relative z-10 text-xs xl:text-sm font-medium'>
+                            {item.name}
+                          </span>
+
+                          {/* Active indicator */}
+                          {isActive && (
+                            <span className='absolute inset-x-3 xl:inset-x-4 bottom-0 h-[2px] bg-primary-gold' />
+                          )}
+
+                          {/* Hover effect */}
+                          <span className='absolute inset-x-3 xl:inset-x-4 bottom-0 h-[2px] bg-primary-gold transform scale-x-0 group-hover:scale-x-100 transition-transform duration-300 origin-right' />
+                        </Link>
+                      )}
+                    </div>
+                  );
+                })}
               </nav>
 
               {/* Right Section - Responsive */}
@@ -376,7 +442,7 @@ export default function Header() {
                     href='/register'
                     className='relative overflow-hidden group'
                   >
-                    <div className='absolute inset-0 bg-gradient-to-r from-primary-gold to-primary-gold/80 opacity-0 group-hover:opacity-100 rounded-lg  transition-opacity duration-500' />
+                    <div className='absolute inset-0 bg-gradient-to-r from-primary-gold to-primary-gold/80 opacity-0 group-hover:opacity-100 rounded-lg transition-opacity duration-500' />
                     <div className='relative z-10 flex items-center gap-1 xl:gap-2 border-2 border-primary-gold px-4 xl:px-5 py-2 text-primary-gold group-hover:text-black transition-colors duration-500 rounded-lg hover:overflow-hidden'>
                       <GiNinjaStar
                         size={14}
@@ -427,91 +493,135 @@ export default function Header() {
               {/* Navigation */}
               <div className='p-4 sm:p-6'>
                 <nav className='flex flex-col gap-1'>
-                  {navigation.map((item) => (
-                    <div
-                      key={item.name}
-                      className='border-b border-gray-800/50 last:border-0'
-                    >
-                      {item.submenu ? (
-                        <div className='py-2'>
-                          <button
-                            onClick={() => toggleMobileSubmenu(item.name)}
-                            className='w-full flex items-center justify-between py-2 group'
-                          >
-                            <span className='text-primary-gold text-sm font-medium group-hover:text-amber-400 transition-colors'>
-                              {item.name}
-                            </span>
-                            <div className='flex items-center gap-2'>
-                              <span className='text-[10px] text-gray-400 truncate max-w-[120px]'>
-                                {item.description}
-                              </span>
-                              <FiChevronDown
-                                className={`text-primary-gold/60 transition-transform duration-300 ${
-                                  openMobileMenus.includes(item.name)
-                                    ? "rotate-180"
-                                    : ""
-                                }`}
-                                size={16}
-                              />
-                            </div>
-                          </button>
+                  {navigation.map((item) => {
+                    const isActive = isActiveLink(item.href);
 
-                          {/* Submenu - Collapsible */}
-                          <div
-                            className={`overflow-hidden transition-all duration-300 ${
-                              openMobileMenus.includes(item.name)
-                                ? "max-h-[500px] opacity-100 mt-2"
-                                : "max-h-0 opacity-0"
-                            }`}
-                          >
-                            <div className='space-y-2 pr-3 border-r-2 border-primary-gold/30 mr-2'>
-                              {item.submenu.map((sub) => {
-                                const Icon = sub.icon;
-                                return (
-                                  <Link
-                                    key={sub.name}
-                                    href={sub.href}
-                                    className='flex items-center gap-3 p-2 hover:bg-primary-gold/10 transition-colors group rounded-lg'
-                                    onClick={() => setIsOpen(false)}
-                                  >
-                                    <div className='w-8 h-8 border border-primary-gold/30 flex items-center justify-center group-hover:border-primary-gold group-hover:bg-primary-gold/10 transition-all rounded-lg'>
-                                      <Icon className='text-primary-gold text-sm' />
-                                    </div>
-                                    <div className='flex-1 min-w-0'>
-                                      <div className='flex items-center gap-2 flex-wrap'>
-                                        <span className='text-sm text-white group-hover:text-primary-gold transition-colors truncate'>
-                                          {sub.name}
-                                        </span>
-                                        <span className='text-[8px] px-1.5 py-0.5 bg-primary-gold/10 border border-primary-gold/30 text-primary-gold rounded-full whitespace-nowrap'>
-                                          {sub.level}
-                                        </span>
+                    return (
+                      <div
+                        key={item.name}
+                        className='border-b border-gray-800/50 last:border-0'
+                      >
+                        {item.submenu ? (
+                          <div className='py-2'>
+                            <button
+                              onClick={() => toggleMobileSubmenu(item.name)}
+                              className='w-full flex items-center justify-between py-2 group'
+                            >
+                              <span
+                                className={`text-sm font-medium transition-colors ${
+                                  isActive
+                                    ? "text-primary-gold"
+                                    : "text-primary-gold/80 group-hover:text-amber-400"
+                                }`}
+                              >
+                                {item.name}
+                              </span>
+                              <div className='flex items-center gap-2'>
+                                <span className='text-[10px] text-gray-400 truncate max-w-[120px]'>
+                                  {item.description}
+                                </span>
+                                <FiChevronDown
+                                  className={`transition-transform duration-300 ${
+                                    isActive
+                                      ? "text-primary-gold"
+                                      : "text-primary-gold/60"
+                                  } ${
+                                    openMobileMenus.includes(item.name)
+                                      ? "rotate-180"
+                                      : ""
+                                  }`}
+                                  size={16}
+                                />
+                              </div>
+                            </button>
+
+                            {/* Submenu - Collapsible */}
+                            <div
+                              className={`overflow-hidden transition-all duration-300 ${
+                                openMobileMenus.includes(item.name)
+                                  ? "max-h-[500px] opacity-100 mt-2"
+                                  : "max-h-0 opacity-0"
+                              }`}
+                            >
+                              <div className='space-y-2 pr-3 border-r-2 border-primary-gold/30 mr-2'>
+                                {item.submenu.map((sub) => {
+                                  const Icon = sub.icon;
+                                  const isSubActive = isActiveLink(sub.href);
+
+                                  return (
+                                    <Link
+                                      key={sub.name}
+                                      href={sub.href}
+                                      className={`flex items-center gap-3 p-2 transition-colors group rounded-lg ${
+                                        isSubActive
+                                          ? "bg-primary-gold/20"
+                                          : "hover:bg-primary-gold/10"
+                                      }`}
+                                      onClick={() => setIsOpen(false)}
+                                    >
+                                      <div
+                                        className={`w-8 h-8 border flex items-center justify-center transition-all rounded-lg ${
+                                          isSubActive
+                                            ? "border-primary-gold bg-primary-gold/30"
+                                            : "border-primary-gold/30 group-hover:border-primary-gold group-hover:bg-primary-gold/10"
+                                        }`}
+                                      >
+                                        <Icon
+                                          className={`text-sm ${
+                                            isSubActive
+                                              ? "text-primary-gold"
+                                              : "text-primary-gold"
+                                          }`}
+                                        />
                                       </div>
-                                      <p className='text-[10px] text-gray-400 line-clamp-1'>
-                                        {sub.description}
-                                      </p>
-                                    </div>
-                                  </Link>
-                                );
-                              })}
+                                      <div className='flex-1 min-w-0'>
+                                        <div className='flex items-center gap-2 flex-wrap'>
+                                          <span
+                                            className={`text-sm transition-colors truncate ${
+                                              isSubActive
+                                                ? "text-primary-gold"
+                                                : "text-white group-hover:text-primary-gold"
+                                            }`}
+                                          >
+                                            {sub.name}
+                                          </span>
+                                          <span className='text-[8px] px-1.5 py-0.5 bg-primary-gold/10 border border-primary-gold/30 text-primary-gold rounded-full whitespace-nowrap'>
+                                            {sub.level}
+                                          </span>
+                                        </div>
+                                        <p className='text-[10px] text-gray-400 line-clamp-1'>
+                                          {sub.description}
+                                        </p>
+                                      </div>
+                                    </Link>
+                                  );
+                                })}
+                              </div>
                             </div>
                           </div>
-                        </div>
-                      ) : (
-                        <Link
-                          href={item.href}
-                          className='flex items-center justify-between py-3 group'
-                          onClick={() => setIsOpen(false)}
-                        >
-                          <span className='text-gray-300 text-sm group-hover:text-primary-gold transition-colors'>
-                            {item.name}
-                          </span>
-                          <span className='text-[10px] text-gray-500 truncate max-w-[150px]'>
-                            {item.description}
-                          </span>
-                        </Link>
-                      )}
-                    </div>
-                  ))}
+                        ) : (
+                          <Link
+                            href={item.href}
+                            className='flex items-center justify-between py-3 group'
+                            onClick={() => setIsOpen(false)}
+                          >
+                            <span
+                              className={`text-sm transition-colors ${
+                                isActive
+                                  ? "text-primary-gold"
+                                  : "text-gray-300 group-hover:text-primary-gold"
+                              }`}
+                            >
+                              {item.name}
+                            </span>
+                            <span className='text-[10px] text-gray-500 truncate max-w-[150px]'>
+                              {item.description}
+                            </span>
+                          </Link>
+                        )}
+                      </div>
+                    );
+                  })}
                 </nav>
 
                 {/* Auth buttons for mobile - Improved */}
