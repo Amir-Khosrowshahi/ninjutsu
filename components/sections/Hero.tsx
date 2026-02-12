@@ -28,7 +28,7 @@ export default function Hero() {
       {/* Background Image */}
       <div className='absolute inset-0'>
         <Image
-          src='/img/hero/san.JPG'
+          src='/img/hero/mehdi-solhdoost.JPG'
           alt='Samurai Dojo'
           fill
           priority
