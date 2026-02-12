@@ -40,7 +40,7 @@ export default function RootLayout({
         <div className='relative min-h-screen'>
           <div className='fixed inset-0 opacity-5 pointer-events-none' />
           <Header />
-          <main className='relative z-10 overflow-hidden'>{children}</main>
+          <main className='relative z-10 '>{children}</main>
           <Footer />
         </div>
       </body>

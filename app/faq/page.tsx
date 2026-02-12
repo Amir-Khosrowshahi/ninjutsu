@@ -99,11 +99,11 @@ export default function FAQPage() {
   };
 
   return (
-    <section className='relative py-24 lg:py-32 bg-black overflow-visible'>
+    <section className='relative py-24 lg:py-32 bg-black overflow-y-visible'>
       <div className='h-20 lg:h-[120px]' />
 
       {/* Background Pattern */}
-      <div className='absolute inset-0'>
+      <div className='absolute inset-0 overflow-hidden'>
         <div className='absolute inset-0 opacity-5'>
           <div className='absolute top-0 left-0 w-full h-full bg-[radial-gradient(circle_at_30%_50%,rgba(255,215,0,0.1)_0%,transparent_50%)]' />
           <div className='absolute top-20 left-10 text-8xl text-primary-gold/10 rotate-12'>
